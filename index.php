@@ -11,6 +11,21 @@
 #define
 include_once 'includes/core.php';
 
-$core->writeDebug("Test");
+$core->writeDebug("Initialization Complete", "index.php");
+
+switch($_GET['page']){
+
+    case 'messages':
+        $core->handle('messageboard');
+        break;
+    case 'dispatch':
+        $core->handle('dispatch');
+        break;
+
+    default:
+        $core->handle('index');
+        break;
+}
+
 
 ?>
