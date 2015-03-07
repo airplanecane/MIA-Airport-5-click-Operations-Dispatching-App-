@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">SQUAD</string>
+
+    <string name="hello_world">Hello Hackathon!</string>
+    <string name="action_settings">Settings</string>
+</resources>
