@@ -57,6 +57,11 @@ class Core {
 
     }
 
+    public function getDB(){
+        return $this->db;
+
+    }
+
     /**
      * Prepare and execute a query on the database
      * @param $query MySQL query to be executed

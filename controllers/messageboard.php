@@ -49,28 +49,36 @@ class MessageBoard implements PageHandler
 
         $this->page = file_get_contents('./pages/messageboard.html');
         $this->page = str_replace("<!-TABLE OF MESSAGES->", $tableOfMessages, $this->page);
+        $this->page = str_replace("<!-- HEADER -->", file_get_contents('./pages/header.html'), $this->page);
     }
 
     private function getMessageTable()
     {
         $messages = $this->core->execute("SELECT * FROM `messages`");
         $messages = $messages->fetchAll(PDO::FETCH_CLASS, "Message");
-
+        $messageTable = "";
        foreach($messages as $m){
-            $this->core->writeDebug("New message");
            $m->setCore($this->core);
-           echo "Sender: " . $m->getSenderName() . "<br>";
-           echo "Read  : " . $m->getRead() . "<br>";
-           echo "Read By : " . $m->getReaderName();
-           if($m->getRead() == "Yes"){
-               echo " at " . $m->getReadTime();
-           }
-           echo "<br>Department : " . $m->getType() . "<br>";
-           echo "Message : <br> " . $m->getMessage() . "<br><br><hr>";
 
+           if($m->getRead() == "No"){
+               $timestamp = "Unread";
+           } else {
+               $timestamp = $m->getReadtime();
+           }
+
+           $messageTable .= '<tr>';
+           $messageTable .= '<td>'. $m->getTimestamp()  .'</td>';
+           $messageTable .= '<td>'. $m->getSenderName() .'</td>';
+           $messageTable .= '<td>'. $m->getType() .'</td>';
+           $messageTable .= '<td>'. $m->getMessage() .'</td>';
+           $messageTable .= '<td>'. $timestamp .'</td>';
+           $messageTable .= '<td>'. $m->getReaderName() .'</td>';
+           $messageTable .= '<td><button type="button" class="btn btn-danger navbar-btn btn-circle" onclick="window.location=\'?\'">Mark Unread</button></td>';
+           $messageTable .= '</tr>';
 
        }
 
+        return $messageTable;
 
     }
 
