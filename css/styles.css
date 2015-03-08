@@ -6,6 +6,29 @@
 @import url(animate.css);
 
 /* Selections */
+.popbox {
+    display: none;
+    position: absolute;
+    z-index: 99999;
+    width: 400px;
+    padding: 10px;
+    background: #EEEFEB;
+    color: #000000;
+    border: 1px solid #4D4F53;
+    margin: 0;
+    -webkit-box-shadow: 0 0 5px 0 rgba(164, 164, 164, 1);
+    box-shadow: 0 0 5px 0 rgba(164, 164, 164, 1);
+}
+.popbox h2
+{
+    background-color: #4D4F53;
+    color:  #E3E5DD;
+    font-size: 14px;
+    display: block;
+    width: 100%;
+    margin: -10px 0 8px -10px;
+    padding: 5px 10px;
+}
 
 ::selection {
     color: #fff;
@@ -109,8 +132,9 @@ input[type=file] {
     -moz-transition: all .4s ease;
     transition: all .4s ease;
 }
-input[type=number] {
+input[type=text] {
     color: #777;
+    text-align:center;
     horiz-align: center;
     padding-left: 10px;
     margin: 10px;
@@ -118,24 +142,24 @@ input[type=number] {
     margin-left: 18px;
     width: 290px;
     height: 35px;
+    resize: none;
     border: 1px solid #c7d0d2;
     border-radius: 2px;
-    box-shadow: inset 0 1.5px 3px rgba(190, 190, 190, .4), 0 0 0 5px #f5f7f8;
+    box-shadow: inset 0 2px 3px rgba(190, 190, 190, .4), 0 0 0 5px #f5f7f8;
     -webkit-transition: all .4s ease;
     -moz-transition: all .4s ease;
     transition: all .4s ease;
 }
 
-input[type=file]:hover,
-input[type=number]:hover {
+input[type=text]:hover {
     border: 1px solid #b6bfc0;
-    box-shadow: inset 0 1.5px 3px rgba(190, 190, 190, .7), 0 0 0 5px #f5f7f8;
+    box-shadow: inset 0 2px 3px rgba(190, 190, 190, .7), 0 0 0 5px #f5f7f8;
 }
 
 input[type=text]:focus,
 input[type=password]:focus {
     border: 1px solid #a8c9e4;
-    box-shadow: inset 0 1.5px 3px rgba(190, 190, 190, .4), 0 0 0 5px #e6f2f9;
+    box-shadow: inset 0 2px 3px rgba(190, 190, 190, .4), 0 0 0 5px #e6f2f9;
 }
 
 #lower {
@@ -144,9 +168,9 @@ input[type=password]:focus {
     height: 69px;
     margin-top: 20px;
     box-shadow: inset 0 1px 1px #fff;
-    border-top: 1px solid #ccc;
-    border-bottom-right-radius: 3px;
-    border-bottom-left-radius: 3px;
+    border: 1px solid #ccc;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 
 input[type=checkbox] {

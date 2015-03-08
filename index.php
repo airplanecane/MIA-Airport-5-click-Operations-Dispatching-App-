@@ -8,10 +8,17 @@
  *  Miami - Smart Cities Hackathon @ FIU 03/06/15 - 03/08/15
  */
 
-#define
+
+session_start();
+
 include_once 'includes/core.php';
 
 $core->writeDebug("Initialization Complete", "index.php");
+
+if(isset($_GET['error'])){
+    $core->error($_GET['error']);
+}
+
 
 switch($_GET['page']){
 
@@ -27,5 +34,3 @@ switch($_GET['page']){
         break;
 }
 
-
-?>

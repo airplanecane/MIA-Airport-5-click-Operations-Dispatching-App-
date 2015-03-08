@@ -16,23 +16,72 @@ $core = new Core();
 class Core {
     private $config;
     private $db;
-    private $messageBoard;
+    private $dateTime;
+    private $errors = "";
     private $file;
 
     function __construct(){
+        date_default_timezone_set("EDT");
         $this->file = "core.php";
         $this->writeDebug("Initializing <b>core</b>", $this->file);
 
         $this->config = new Config($this);
         $this->connectDatabase($this->config->getDBConfig());
 
+
+        $this->writeDebug("Starting to handle files", $this->file);
         $this->handler = new Handler($this);
+
+        $this->writeDebug("Starting to set up date time", $this->file);
+       // $this->dateTime = new DateTime("now", new DateTimeZone($this->config->getTimeZone()));
+
+        $this->writeDebug("Core set up successfully", $this->file);
+    }
+
+    public function updateCounter(){
+        $tmpFile = fopen('counter.json', "w") or die('error opening temporary files');
+
+        $lastUpdate = '{ "time":' . microtime(true)  .' }';
+
+        fwrite($tmpFile, $lastUpdate);
+        fclose($tmpFile);
+
+        $tmpFile = null;
 
     }
 
-    public function handle($page){
-        $this->handler->handle($page);
-        echo $this->handler->output();
+    public function getDateTime(){
+        return $this->dateTime;
+    }
+    public function error($error, $errorTitle = "Error!"){
+
+        $this->errors .= '
+        <div class="modal fade" id="errorModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title">'.$errorTitle.'</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>'.$error.'</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" ><a href="?page=messages">Close</a></button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        ';
+
+
+
+    }
+
+    public function handle($page, $mobile = false){
+        $this->writeDebug("Attempting to handle $page with mobile ($mobile)");
+        $this->handler->handle($page, $mobile);
+        echo $this->handler->output() . $this->errors;
     }
 
     public function login($barcodeNumber, $userPin){
@@ -83,14 +132,14 @@ class Core {
         $dbPort = $dbConfig['port'];
 
         $this->writeDebug("Connecting to database $dbName with username $dbUser", $this->file);
-        $this->db = new PDO("mysql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPass); // Create new PDO
-        $this->writeDebug("Connected to database!", $this->file);
+        try{
+            $this->db = new PDO("mysql:host=$dbHost;port=$dbPort;dbname=$dbName", $dbUser, $dbPass);
+        } catch(Exception $e) {
+            die("Unable to establish database link!");
+        }
 
     }
 
-    private function closeDatabase(){
-        $this->db = null;
-    }
 
 }
 

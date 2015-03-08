@@ -7,13 +7,17 @@
  *  Miami - Smart Cities Hackathon @ FIU 03/06/15 - 03/08/15
  */
 
-include_once './controllers/PageHandler.php';
-class index implements PageHandler {
-    private $name = "Index";
-    private $page;
-    private $core;
+include './controllers/PageHandler.php';
 
-    function __construct($core){
+class MessageDetail implements PageHandler{
+    private $core;
+    private $name = 'Details';
+
+    /**
+     * @param $core pointer to Core class
+     */
+    function __construct($core)
+    {
         $this->core = $core;
     }
 
@@ -38,15 +42,8 @@ class index implements PageHandler {
      */
     function handle()
     {
-        $_SESSION['userid'] = 1;
-        if($_GET['logged-in'] == 1) {
-
-            echo '<script>window.location.replace("?page=messages");</script>';
-        } else {
-            $this->page = file_get_contents("./pages/login.html");
-
-
-        }
+        $this->page = file_get_contents('./pages/details.html');
+        $this->page = str_replace('<!-- HEADER -->', file_get_contents('./pages/header.html'), $this->page);
 
     }
 }

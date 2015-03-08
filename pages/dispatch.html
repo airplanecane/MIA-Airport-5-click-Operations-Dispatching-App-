@@ -12,6 +12,7 @@
                         <label class="col-md-4 control-label" for="selectbasic">Department</label>
                         <div class="col-md-4">
                             <select id="selectbasic" name="selectbasic" class="form-control">
+
                                 <!-- Fill Departments -->
                             </select>
                         </div>
@@ -21,7 +22,35 @@
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="incident-description">Description</label>
                         <div class="col-md-4">
-                            <textarea class="form-control" id="incident-description" name="incident-description" maxlength="300"></textarea>
+                            <textarea class="form-control" id="incident-description" name="incident-description" maxlength="150"></textarea>
+                        </div>
+                    </div>
+                    <!-- Geolocation  -->
+
+                    <div class="form-group">
+                        <label class="col-md-4 control-label" for="geolocation">Geolocation</label>
+                        <div class="col-md-4">
+                            <span id="geolocation-error"></span>
+                            <input type="button" id="geolocation" onclick="requestGeo(); alert('Please wait for confirmation before submitting')"
+                                   value="Add location">
+                            <input type="hidden" id="lat" name="lat">
+                            <input type="hidden" id="long" name="long">
+                            <script>
+                                var lat = document.getElementById('lat');
+                                var long = document.getElementById('long');
+                                function requestGeo() {
+                                    if (navigator.geolocation) {
+                                        navigator.geolocation.getCurrentPosition(showPosition);
+                                    } else {
+                                        x.innerHTML = "Geolocation is not supported by this browser.";
+                                    }
+                                }
+                                function showPosition(position) {
+                                    lat.value = position.coords.latitude;
+                                    long.value = position.coords.longitude;
+                                    alert('Your location has been added!');
+                                }
+                            </script>
                         </div>
                     </div>
 
@@ -29,6 +58,10 @@
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="submit-report"></label>
                         <div class="col-md-4">
+                            <div class="g-recaptcha" data-sitekey="6Le_IwMTAAAAAK8hyDWUxzu4X9jBFOCGIsL0I8bc" style="float:center;">
+
+                            </div>
+                                <br/>
                             <button id="submit-report" name="submit-report" class="btn btn-primary">Submit Report</button>
                         </div>
                     </div>

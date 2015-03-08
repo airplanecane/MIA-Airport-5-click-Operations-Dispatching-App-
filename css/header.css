@@ -1,15 +1,7 @@
-/*
-Free App template for Bootstrap 3
-Code snippet by maridlcrmn for Bootsnipp.com
-Follow me on Twitter @maridlcrmn
-Image credits: unsplash.com
-Image placeholders: placemi.com
-*/
-
-
 .mt-100 {
     margin-top: 100px;
 }
+
 .mb-100 {
     margin-bottom: 100px;
 }
@@ -28,6 +20,7 @@ Image placeholders: placemi.com
     background-color: #eee;
     overflow: hidden;
 }
+
 .footer {
     color: #887;
     background-color: #eee;
@@ -41,23 +34,41 @@ Image placeholders: placemi.com
     width: 100%;
     min-height: 100vh;
 }
+
 .pull-middle {
     display: table-cell;
     vertical-align: middle;
 }
 
-.btn {
-    padding-left: 25px;
-    padding-right: 25px;
-}
-.btn-circle {
+.btn-round {
     border-radius: 20px;
     color: #FFF;
 }
+#mytable {
+    width: 100%;
+    table-layout: fixed;
+
+}
 #mytable .btn-circle {
-    margin-top: -3px;
+    display: table-cell;
+    vertical-align: middle;
+    horiz-align: center;
+    text-align: center;
+    width: 95px;
+    color: #FFF;
+
+    margin-top: -5px;
+    margin-bottom: -15px;
+    vertical-align: middle;
 }
 
+#mytable .btn-info,
+#mytable .btn-success,
+#mytable .btn-danger {
+    border-radius: 5px;
+    color: #FFF;
+    top: 0;
+}
 #btn-circle a {
     color: #FFF;
 }
@@ -67,11 +78,13 @@ Image placeholders: placemi.com
     box-shadow: none;
     padding-right: 30px;
 }
+
 .input-group input:focus,
 .input-group input:active {
     outline: 0;
     box-shadow: none;
 }
+
 .input-group-btn:last-child>.btn {
     z-index: 2;
     margin-left: -18px;
@@ -88,13 +101,53 @@ Image placeholders: placemi.com
     background-color: #222;
     box-shadow: 20px 20px 40px #887;
 }
-body {
 
+body {
+    font-size: small;
     margin-top: 50px;
 }
 
 .wrapper {
     display: inline-block;
+}
 
+.filterable {
+    margin-top: 15px;
+}
+.filterable .panel-heading .pull-right {
+    margin-top: -20px;
+}
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: #333;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+    color: #333;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+    color: #333;
+}
+tbody tr:nth-child(even)  td { background-color: #eee; }
 
+@media screen and (max-width: 640px) {
+
+    table {
+        overflow-x: auto;
+        display: block;
+
+    }
+    body {
+        font-size: 11px;
+    }
+
+    .hidden-phone {
+        display: block;
+    }
 }

@@ -6,20 +6,29 @@
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width; height=device-height; initial-scale=1.0; maximum-scale=1.0;user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
 
-    <title>Login</title>
+    <title>Airport Dispatcher</title>
 
     <!-- CSS -->
-
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="icon" href="./apple-touch-icon.png" />
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/styles.css">
+    <script>
+        function BlockMove(event) {
+            // Tell Safari not to move the window.
+            event.preventDefault() ;
+        }
+    </script>
 
 </head>
 
 <!-- Main HTML -->
 
-<body>
+<body ontouchmove="BlockMove(event);">
 
 <!-- Begin Page Content -->
 
@@ -33,11 +42,11 @@
 
         <div id="pin-input">
             <label for="pin">PIN:</label>
-            <input type="number" id="pin" min="0" max="9999" pattern="\d*" name="pin">
+            <input type="text" id="pin" maxlength="4" pattern="\d*" name="pin">
         </div>
 
         <div id="lower">
-            <input type="checkbox" id="checkbox"><label class="check" for="checkbox">Keep me logged in</label>
+            <input type="checkbox" id="checkbox"><label class="check" for="checkbox">Only ask for pin next time!</label>
             <input type="submit" value="Login">
         </div><!--/ lower-->
 

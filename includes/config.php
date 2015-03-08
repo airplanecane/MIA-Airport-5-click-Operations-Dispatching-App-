@@ -30,6 +30,11 @@ class Config {
             throw new ErrorException("Config not found");
         }
     }
+    public function getTimeZone(){
+        $this->core->writeDebug("Getting timezone");
+        return $this->cfg['timezone'];
+
+    }
 
     public function isDebugging(){
         include "conf.php";

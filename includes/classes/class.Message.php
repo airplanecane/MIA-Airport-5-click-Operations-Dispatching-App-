@@ -1,98 +1,15 @@
 <?php
-class MessageType{
-    public $type;
-    public $typedescription;
+/*  FILENAME - SHORT DESCRIPTION
+ *
+ *  LONG DESCRIPTION 
+ * 
+ *  Operations Control Room App
+ *  Miami - Smart Cities Hackathon @ FIU 03/06/15 - 03/08/15
+ */
 
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
 
-    /**
-     * @return mixed
-     */
-    public function getTypeDescription()
-    {
-        return $this->typedescription;
-    }
-}
-class User {
-    public $id;
-    public $name;
-    public $barcodeID;
-    public $pin;
-    public $type;
-    public $lastlogin;
-    public $ip;
+date_default_timezone_set("EDT");
 
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPin()
-    {
-        return $this->pin;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLastlogin()
-    {
-        return $this->lastlogin;
-    }
-
-    /**
-     * @param mixed $lastlogin
-     */
-    public function setLastlogin($lastlogin)
-    {
-        $this->lastlogin = $lastlogin;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIp()
-    {
-        return $this->ip;
-    }
-
-    /**
-     * @param mixed $ip
-     */
-    public function setIp($ip)
-    {
-        $this->ip = $ip;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-}
 class Message
 {
     private $core;
@@ -101,8 +18,10 @@ class Message
     private $type, $typeid;
     private $message;
     private $timestamp;
+    public $lat = 0.0, $long = 0.0;
     private $unread = true;
     private $readtime;
+    private $hasGeo;
 
     function __construct()
     {
@@ -113,10 +32,10 @@ class Message
     {
         if (!$this->type instanceof MessageType)
             $this->typeid = $this->type;
-            if ($this->core != null) {
-                $messageType = $this->core->execute("SELECT * FROM `messagetypes` WHERE `type` = $this->type");
-                $messageType = $messageType->fetchAll(PDO::FETCH_CLASS, "MessageType");
-            }
+        if ($this->core != null) {
+            $messageType = $this->core->execute("SELECT * FROM `messagetypes` WHERE `type` = $this->type");
+            $messageType = $messageType->fetchAll(PDO::FETCH_CLASS, "MessageType");
+        }
 
         $this->type = $messageType[0];
 
@@ -193,15 +112,30 @@ class Message
         return $this->message;
     }
 
+
+    public function hasGeoInfo(){
+
+        return (floor($this->lat) != 0 || floor($this->long) != 0);
+
+
+    }
+
+    public function getSimpleTimestamp(){
+
+        return date('m/d g:i A', strtotime($this->timestamp));
+    }
+
     /**
      * @return mixed
      */
     public function getTimestamp()
     {
-        if($this->getRead()){
-            $timestamp = '<span style="color: darkred">' . date('m/d g:i A', strtotime($this->timestamp)) . '</span>';
+        if ($this->getRead()) {
+            $timestamp =  '<span  class="hidden-xs"  style="color: darkred">' . date('m/d g:i A', strtotime($this->timestamp)) . '</span>';
+            $timestamp .=  '<span class="visible-xs" style="color: darkred">' . date('g:i A', strtotime($this->timestamp)) . '</span>';
         } else {
-            $timestamp = '<span style="color: green">' . date('m/d g:i A', strtotime($this->timestamp)) . '</span>';
+            $timestamp = '<span class="hidden-xs" style="color: green">' . date('m/d g:i A', strtotime($this->timestamp)) . '</span>';
+            $timestamp .= '<span class="visible-xs" style="color: green">' . date('g:i A', strtotime($this->timestamp)) . '</span>';
         }
         return $timestamp;
     }
@@ -216,12 +150,13 @@ class Message
 
         return $this->unread;
     }
+
     public function getUnread()
-{
+    {
 
 
-    return !$this->unread;
-}
+        return !$this->unread;
+    }
 
     /**
      * @param mixed $unread
@@ -256,19 +191,36 @@ class Message
     }
 
 
-    public function insert($db){
+    public function insert($db)
+    {
 
-        $message = $db->prepare("UPDATE `messages` SET id=:id, sender=:sender, first_reader=:reader,
-                    type=:type, message=:message, timestamp=:timestamp, unread=:unread, readtime=CURRENT_TIMESTAMP
-                    WHERE id = :id;");
-        $message->bindParam(':id', $this->getId(), PDO::PARAM_INT);
-        $message->bindParam(':sender', $this->getSender(), PDO::PARAM_INT);
-        $message->bindParam(':reader', $this->reader, PDO::PARAM_INT);
-        $message->bindParam(':type', $this->typeid, PDO::PARAM_INT);
+        $message = $db->prepare('
+        UPDATE
+             messages
+        SET
+             id            =  :id,
+             sender        =  :sender,
+             first_reader  =  :reader,
+             type          =  :ttype,
+             message       =  :message,
+             lat           =  :lat,
+             `long`          =  :long,
+             timestamp     =  :ttimestamp,
+             unread        =  :unread,
+             readtime      =  CURRENT_TIMESTAMP
+
+         WHERE id = :id');
+
+        $message->bindParam(':id',      $this->getId(), PDO::PARAM_INT);
+        $message->bindParam(':sender',  $this->getSender(), PDO::PARAM_INT);
+        $message->bindParam(':reader',  $this->reader, PDO::PARAM_INT);
+        $message->bindParam(':ttype',    $this->typeid, PDO::PARAM_INT);
         $message->bindParam(':message', $this->getMessage(), PDO::PARAM_STR);
-        $message->bindParam(':timestamp', date('Y-m-d G:i:s', strtotime($this->timestamp)), PDO::PARAM_BOOL);
-        $message->bindParam(':unread', $this->getRead(), PDO::PARAM_BOOL);
-        $message->bindParam(':readtime', $this->getReadtime(), PDO::PARAM_STR);
+        $message->bindParam(':lat',     $this->lat);
+        $message->bindParam(':long',    $this->long);
+        $message->bindValue(':ttimestamp', date('Y-m-d G:i:s', strtotime($this->timestamp)));
+        $message->bindParam(':unread' , $this->getRead(), PDO::PARAM_BOOL);
+
         $message->execute();
 
     }
@@ -282,5 +234,3 @@ class Message
     }
 
 }
-
-?>
